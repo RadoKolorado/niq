@@ -1,0 +1,20 @@
+filename inzip ZIP "/shared/home/rk116270@student.sgh.waw.pl/casuser/modelrk/polaczone4.zip";
+
+/* identify a temp folder in the WORK directory */
+filename csv "%sysfunc(getoption(work))/polaczone4.csv";
+ 
+/* hat tip: "data _null_" on SAS-L */
+data _null_;
+   /* using member syntax here */
+   infile inzip(polaczone4.csv) 
+       lrecl=256 recfm=F length=length eof=eof unbuf;
+   file   csv lrecl=256 recfm=N;
+   input;
+   put _infile_ $varying256. length;
+   return;
+ eof:
+   stop;
+run;
+ 
+proc import datafile=csv dbms=csv out=polaczone4 replace;
+run;
